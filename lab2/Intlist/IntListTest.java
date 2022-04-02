@@ -58,6 +58,14 @@ public class IntListTest {
     }
 
     @Test
+    public void testDcatenateNull() {
+        IntList A = null;
+        IntList B = IntList.of(4, 5, 6);
+        IntList exp = IntList.of(4, 5, 6);
+        assertEquals(exp, IntList.dcatenate(A, B));
+        assertEquals(IntList.of(4, 5, 6), A);
+    }
+    @Test
     public void testCatenate() {
         IntList A = IntList.of(1, 2, 3);
         IntList B = IntList.of(4, 5, 6);
