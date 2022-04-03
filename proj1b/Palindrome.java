@@ -7,7 +7,7 @@ public class Palindrome {
         }
         return result;
     }
-    public Deque<Character> wordToReverseDeque(String word) {
+    private Deque<Character> wordToReverseDeque(String word) {
         Deque<Character> result = new LinkedListDeque<>();
         for (int i = 0; i < word.length(); i += 1) {
             char character = word.charAt(i);
@@ -27,9 +27,9 @@ public class Palindrome {
         Deque<Character> normalOrder = wordToDeque(word);
         Deque<Character> reverseOrder = wordToReverseDeque(word);
         int middle;
-        middle = word.length() % 2 == 1? (word.length() - 1) / 2 : word.length() / 2;
-        for (int i = 0; i < middle; i +=1 ) {
-            if(!cc.equalChars(normalOrder.get(i), reverseOrder.get(i))) {
+        middle = word.length() % 2 == 1 ? (word.length() - 1) / 2 : word.length() / 2;
+        for (int i = 0; i < middle; i += 1) {
+            if (!cc.equalChars(normalOrder.get(i), reverseOrder.get(i))) {
                 return false;
             }
         }

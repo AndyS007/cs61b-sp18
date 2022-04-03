@@ -26,15 +26,15 @@ public class TestPalindrome {
     @Test
     public void testIsPalindromeCC() {
         CharacterComparator cc = new OffByOne();
-        assertTrue(palindrome.isPalindrome("flake",cc));
-        assertTrue(palindrome.isPalindrome("flke",cc));
-        assertTrue(palindrome.isPalindrome("acdb",cc));
+        assertTrue(palindrome.isPalindrome("flake", cc));
+        assertTrue(palindrome.isPalindrome("flke", cc));
+        assertTrue(palindrome.isPalindrome("acdb", cc));
     }
     @Test
     public void testIsPalindromeOffByN() {
         CharacterComparator cc = new OffByN(5);
-        assertTrue(palindrome.isPalindrome("afafaf",cc));
-        assertTrue(palindrome.isPalindrome("af",cc));
-        assertTrue(palindrome.isPalindrome("i",cc));
+        assertTrue(palindrome.isPalindrome("afafaf", cc));
+        assertTrue(palindrome.isPalindrome("af", cc));
+        assertTrue(palindrome.isPalindrome("i", cc));
     }
 }
