@@ -102,7 +102,7 @@ public class LinkedListDeque<T> {
     public T getRecursive(int index) {
         return get(index) ;
     }
-
+    /*
     public boolean equals(Object x) {
         if (!(x instanceof LinkedListDeque)) {
             return false;
@@ -119,7 +119,8 @@ public class LinkedListDeque<T> {
         }
         return a == this.sentinel && b == list.sentinel;
     }
-
+     */
+    /*
     public static <K> LinkedListDeque<K> of(K... args) {
         LinkedListDeque<K> result = new LinkedListDeque<>();
         for (K arg : args) {
@@ -127,6 +128,8 @@ public class LinkedListDeque<T> {
         }
         return result;
     }
+
+     */
 
 }
 

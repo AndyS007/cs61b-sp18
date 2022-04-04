@@ -122,7 +122,8 @@ public class ArrayDeque<T> {
         return items[returnIndex];
     }
 
-    public static <K> ArrayDeque<K> of(K... args) {
+    /*
+   public static <K> ArrayDeque<K> of(K... args) {
 
         ArrayDeque<K> result = new ArrayDeque<>();
         for (K arg : args) {
@@ -130,4 +131,6 @@ public class ArrayDeque<T> {
         }
         return result;
     }
+
+     */
 }
