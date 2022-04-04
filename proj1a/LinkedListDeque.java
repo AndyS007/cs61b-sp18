@@ -98,6 +98,11 @@ public class LinkedListDeque<T> {
         }
         return temp.item;
     }
+
+    public T getRecursive(int index) {
+        return get(index) ;
+    }
+
     public boolean equals(Object x) {
         if (!(x instanceof LinkedListDeque)) {
             return false;
