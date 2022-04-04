@@ -3,11 +3,11 @@ public class LinkedListDeque<T> {
     //inner class
     private class ListNode {
 
-        T item;
-        ListNode prev;
-        ListNode next;
+        private T item;
+        private ListNode prev;
+        private ListNode next;
 
-        ListNode(T item, ListNode prev, ListNode next) {
+        private ListNode(T item, ListNode prev, ListNode next) {
             this.item = item;
             this.prev = prev;
             this.next = next;
