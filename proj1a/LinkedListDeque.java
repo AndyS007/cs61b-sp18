@@ -1,5 +1,5 @@
 
-public class LinkedListDeque<T> implements Deque<T> {
+public class LinkedListDeque<T> {
     //inner class
     private class ListNode {
 
@@ -28,7 +28,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         sentinel.next = sentinel;
     }
 
-    @Override
     public void addFirst(T item) {
         ListNode temp = sentinel.next;
         sentinel.next = new ListNode(item, sentinel, temp);
@@ -36,7 +35,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         size += 1;
     }
 
-    @Override
     public void addLast(T item) {
         ListNode temp = sentinel.prev;
         sentinel.prev = new ListNode(item, temp, sentinel);
@@ -46,17 +44,14 @@ public class LinkedListDeque<T> implements Deque<T> {
 
     }
 
-    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
-    @Override
     public int size() {
         return size;
     }
 
-    @Override
     public void printDeque() {
         ListNode temp = sentinel.next;
         while (temp != sentinel) {
@@ -66,7 +61,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         System.out.println();
     }
 
-    @Override
     public T removeFirst() {
         if (size == 0) {
             return null;
@@ -78,7 +72,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         return temp.item;
     }
 
-    @Override
     public T removeLast() {
         if (size == 0) {
             return null;
@@ -89,7 +82,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         size -= 1;
         return temp.item;
     }
-    @Override
     public T get(int index) {
         ListNode temp = sentinel;
         if (index >= size) {
@@ -106,7 +98,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         }
         return temp.item;
     }
-    @Override
     public boolean equals(Object x) {
         if (!(x instanceof LinkedListDeque)) {
             return false;
