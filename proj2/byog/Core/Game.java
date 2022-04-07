@@ -3,6 +3,8 @@ package byog.Core;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 
+import java.util.Locale;
+
 public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
@@ -31,8 +33,17 @@ public class Game {
         // TODO: Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
+        input = input.toLowerCase();
+        Character firstChar = input.charAt(0);
+        StringBuilder sb = new StringBuilder();
+        if (firstChar.equals('n')) {
+            for (int i = 1; input.charAt(i) != 's'; i ++) {
+                sb.append(input.charAt(i));
+            }
+        }
+        int seed = Integer.parseInt(sb.toString());
 
-        TETile[][] finalWorldFrame = null;
-        return finalWorldFrame;
+        MapGenerator map = new MapGenerator(79, 29 ,seed);
+        return map.mapGenerator();
     }
 }
