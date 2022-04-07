@@ -109,8 +109,8 @@ public class HallWay {
     public static void main(String[] args) {
 
         TERenderer ter = new TERenderer();
-        ter.initialize(79,29);
-        TETile[][]world=new TETile[79][29];
+        ter.initialize(80,30);
+        TETile[][]world=new TETile[80][30];
         initializeHallWay(world);
         generateHallWay(world,180084946);
         ter.renderFrame(world);

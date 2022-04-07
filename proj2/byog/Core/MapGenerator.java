@@ -1,5 +1,6 @@
 package byog.Core;
 
+import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
@@ -377,5 +378,11 @@ public class MapGenerator implements Serializable {
                 if (positionOfRoom[i][j]==Tileset.WALL||positionOfRoom[i][j]==Tileset.GRASS)
                     return true;
         return false;
+    }
+    public static void main(String[] args) throws InterruptedException {
+        TERenderer ter=new TERenderer();
+        ter.initialize(80,30);
+        MapGenerator map=new MapGenerator(80,30,284);
+        ter.renderFrame(map.mapGenerator());
     }
 }
