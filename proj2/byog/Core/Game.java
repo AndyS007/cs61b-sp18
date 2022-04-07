@@ -41,7 +41,7 @@ public class Game {
                 sb.append(input.charAt(i));
             }
         }
-        int seed = Integer.parseInt(sb.toString());
+        long seed = Long.parseLong(sb.toString());
 
         MapGenerator map = new MapGenerator(79, 29 ,seed);
         return map.mapGenerator();
