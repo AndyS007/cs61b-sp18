@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 public class GuitarHero {
-    private static final double CONCERT_A = 440.0;
-    private static final double CONCERT_C = CONCERT_A * Math.pow(2, 3.0 / 12.0);
 
 
     public static void main(String[] args) {

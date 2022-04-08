@@ -1,12 +1,15 @@
 // TODO: Make sure to make this class a part of the synthesizer package
 package synthesizer;
 
+import java.util.Random;
+
 public class GuitarString {
     /** Constants. Do not change. In case you're curious, the keyword final means
      * the values cannot be changed at runtime. We'll discuss this and other topics
      * in lecture on Friday. */
     private static final int SR = 44100;      // Sampling Rate
-    private static final double DECAY = .996; // energy decay factor
+    private static final double DECAY = 0.996; // energy decay factor
+    private static final Random RANDOM = new Random(0);
 
     /* Buffer for storing sound data. */
     private BoundedQueue<Double> buffer;
@@ -18,6 +21,7 @@ public class GuitarString {
         //       accuracy, use the Math.round() function before casting.
         //       Your buffer should be initially filled with zeros.
         int capacity = (int) Math.round((SR / frequency));
+        // * 2 is harp strings.
         buffer = new ArrayRingBuffer<>(capacity);
         for (int i = 0; i < buffer.capacity(); i ++) {
             buffer.enqueue(0.0);
@@ -49,7 +53,8 @@ public class GuitarString {
         //       Do not call StdAudio.play().
         double first = buffer.dequeue();
         double second = buffer.peek();
-        double result = (first + second) * 1/2 * DECAY;
+        double result;
+            result = (first + second) * 1 / 2 * DECAY;
         buffer.enqueue(result);
     }
 

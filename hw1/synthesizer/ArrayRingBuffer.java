@@ -39,7 +39,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      * covered Monday.
      */
     public T dequeue() {
-        if (isEmpty()) throw new RuntimeException("Ring Buffer is Empty");
+        if (isEmpty()) throw new RuntimeException("Ring Buffer Underflow");
         T returnVal = rb[first];
         first = (first + 1) % capacity;
         fillCount -= 1;
@@ -51,9 +51,37 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
      */
     public T peek() {
 
-        if (isEmpty()) throw new RuntimeException("Ring Buffer is Empty");
+        if (isEmpty()) throw new RuntimeException("Ring Buffer Underflow");
         return rb[first];
 
+    }
+
+    public class ArbIterator implements Iterator<T> {
+        private int ptr;
+        private int counter;
+
+        public ArbIterator() {
+            ptr = first;
+            counter = fillCount;
+        }
+
+
+        @Override
+        public boolean hasNext() {
+            return counter != 0;
+        }
+
+        @Override
+        public T next() {
+            T result = rb[ptr];
+            ptr = (ptr + 1) % capacity;
+            counter --;
+            return result;
+        }
+    }
+    @Override
+    public Iterator<T> iterator() {
+        return new ArbIterator();
     }
 
 

@@ -17,10 +17,13 @@ public class TestArrayRingBuffer {
              arb.enqueue(i);
         }
         for(int i = 0; i < arb.capacity(); i++ ){
-            System.out.println(arb.dequeue());
+            arb.dequeue();
         }
         for(int i = 4; i < 4 + arb.capacity(); i++ ){
             arb.enqueue(i);
+        }
+        for(int num : arb) {
+            System.out.println(num);
         }
         assertEquals(Integer.valueOf(4), arb.dequeue());
 
