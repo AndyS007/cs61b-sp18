@@ -18,7 +18,7 @@ public class MemoryGameSolution {
                                                    "You got this!", "You're a star!", "Go Bears!",
                                                    "Too easy for you!", "Wow, so impressive!"};
 
-    public static void main(String[] args) {
+    public static void main(String[] args ) {
         if (args.length < 1) {
             System.out.println("Please enter a seed");
             return;
