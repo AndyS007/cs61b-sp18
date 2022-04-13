@@ -53,7 +53,13 @@ public class TestComplexOomage {
         for (int i = 0; i < 100; i++) {
 
             List<Integer> intList = new ArrayList<>(template);
-            intList.set(i, 1);
+            for(int j = i; j < 100; j++) {
+                if (j % 4 == 0) {
+
+                    intList.set(j, 1);
+                }
+
+            }
 
             deadlyList.add(new ComplexOomage(intList));
         }
