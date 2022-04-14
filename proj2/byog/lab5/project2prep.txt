@@ -22,7 +22,7 @@ How did your implementation differ from the given one? What lessons can be learn
 A:
 
 -----
-Q: Consider an algorithm for placing rooms and hallways on your map. 
+Q: Consider an algorithm for placing rooms and hallways on your world.
 Ideally, consider many algorithms and think about what makes some easier or harder to implement. Try and bring those ideas together into a single simple algorithm which accomplishes the task. 
 In general, algorithms with as few edge cases as possible are better algorithms.
 

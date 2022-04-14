@@ -3,7 +3,7 @@ package byog.Core;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 
-import java.util.Locale;
+import java.io.*;
 
 public class Game {
     TERenderer ter = new TERenderer();
@@ -43,7 +43,48 @@ public class Game {
         }
         long seed = Long.parseLong(sb.toString());
 
-        MapGenerator map = new MapGenerator(79, 29 ,seed);
-        return map.mapGenerator();
+        World world = new World(79, 29 ,seed);
+        return world.getMap();
+    }
+
+    public static World loadWorld() {
+        File file = new File("./byog/Core/world.txt");
+        if (file.exists()) {
+            try {
+                FileInputStream fs = new FileInputStream(file);
+                ObjectInputStream os = new ObjectInputStream(fs);
+                World loadWorld = (World) os.readObject();
+                os.close();
+                return loadWorld;
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found");
+                System.exit(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                System.out.println("class not found");
+                System.exit(0);
+            }
+        }
+       return null;
+    }
+
+    public static void saveWorld (World world) {
+        File file = new File("./byog/Core/world.txt");
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fs = new FileOutputStream(file);
+            ObjectOutputStream os = new ObjectOutputStream(fs);
+            os.writeObject(world);
+            os.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+            System.exit(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
