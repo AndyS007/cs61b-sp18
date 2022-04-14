@@ -19,6 +19,7 @@ public class Main {
         while (true) {
             if (StdDraw.hasNextKeyTyped()) {
                 char c = StdDraw.nextKeyTyped();
+
                 switch (c) {
                     case 'a':
                         w.addRandomSquare();

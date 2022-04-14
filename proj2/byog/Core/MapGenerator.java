@@ -4,6 +4,7 @@ import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,12 +12,13 @@ import java.util.Queue;
 import java.util.Random;
 
 public class MapGenerator implements Serializable {
+    @Serial
     private static final long serialVersionUID = 156464981;
-    private int WIDTH;
-    private int HEIGHT;
-    private Random RANDOM;
-    private long SEED;
-    private static final int TIMES=100;
+    private final int WIDTH;
+    private final int HEIGHT;
+    private final Random RANDOM;
+    private final long SEED;
+    private static final int tryAddingRoomTimes =100;
     private static TETile[][]world;
     //记录房间的位置
     private static TETile[][]positionOfRoom;
@@ -340,7 +342,7 @@ public class MapGenerator implements Serializable {
 
     private void fillWithRoom(){
         //nextInt方法返回0到WIDTH-1之间和0到HEIGHT-1之间的数
-        for (int i=0;i<TIMES;i++){
+        for (int i = 0; i< tryAddingRoomTimes; i++){
             int x=RANDOM.nextInt(WIDTH);
             int y=RANDOM.nextInt(HEIGHT);
             int width=RANDOM.nextInt(WIDTH/10)+2;

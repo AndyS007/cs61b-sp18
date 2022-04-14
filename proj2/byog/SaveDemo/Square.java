@@ -1,6 +1,8 @@
 package byog.SaveDemo;
 
 import edu.princeton.cs.introcs.StdDraw;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.awt.Color;
 
@@ -10,6 +12,7 @@ public class Square implements Serializable {
     private double size;
     private Color c;
 
+    @Serial
     private static final long serialVersionUID = 45498234798734234L;
 
 
