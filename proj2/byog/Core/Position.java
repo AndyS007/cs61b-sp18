@@ -11,6 +11,6 @@ public class Position implements Serializable {
             this.y = y;
         }
     public Position() {
-
     }
+
 }

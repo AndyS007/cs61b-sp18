@@ -25,6 +25,12 @@ public class World implements Serializable {
     public Position player;
     public Position door;
 
+    public static void main(String[] args) throws InterruptedException {
+        TERenderer ter=new TERenderer();
+        ter.initialize(80,30);
+        World world =new World(80,30,284);
+        ter.renderFrame(world.getMap());
+    }
     public World(int width, int height, long seed){
         this.HEIGHT=height;
         this.WIDTH=width;
@@ -330,11 +336,5 @@ public class World implements Serializable {
                 if (positionOfRoom[i][j]==Tileset.WALL||positionOfRoom[i][j]==Tileset.GRASS)
                     return true;
         return false;
-    }
-    public static void main(String[] args) throws InterruptedException {
-        TERenderer ter=new TERenderer();
-        ter.initialize(80,30);
-        World world =new World(80,30,284);
-        ter.renderFrame(world.mapGenerator());
     }
 }

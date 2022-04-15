@@ -33,21 +33,43 @@ public class Game {
         // TODO: Fill out this method to run the game using the input passed in,
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
-        input = input.toLowerCase();
-        Character firstChar = input.charAt(0);
-        StringBuilder sb = new StringBuilder();
-        if (firstChar.equals('n')) {
-            for (int i = 1; input.charAt(i) != 's'; i ++) {
-                sb.append(input.charAt(i));
-            }
-        }
-        long seed = Long.parseLong(sb.toString());
 
-        World world = new World(79, 29 ,seed);
+        input = input.toLowerCase();
+        World world = initialWorld(input);
+
+
         return world.getMap();
     }
 
-    public static World loadWorld() {
+    public long parseSeed(String input) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; input.charAt(i) != 's'; i++) {
+            sb.append(input.charAt(i));
+        }
+        return Long.parseLong(sb.toString());
+    }
+
+    public World initialWorld(String input) {
+        switch(input.charAt(0)) {
+            case 'n': {
+                long seed = parseSeed(input);
+                return new World(WIDTH, HEIGHT, seed);
+            }
+            case 'l': {
+                return loadWorld();
+            }
+            case 'q': {
+                System.exit(0);
+            }
+            default: {
+                System.out.println("Invalid input");
+                System.exit(0);
+            }
+        }
+        return null;
+    }
+
+    public World loadWorld() {
         File file = new File("./byog/Core/world.txt");
         if (file.exists()) {
             try {
@@ -69,7 +91,7 @@ public class Game {
        return null;
     }
 
-    public static void saveWorld (World world) {
+    public void saveWorld (World world) {
         File file = new File("./byog/Core/world.txt");
         try {
             if (!file.exists()) {
