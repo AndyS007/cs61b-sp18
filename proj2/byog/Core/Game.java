@@ -13,14 +13,14 @@ public class Game {
     World world;
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
-    public static final int HEIGHT = 30;
-    public static final int MENULENGTH = 40;
+    public static final int HEIGHT = 50;
+    public static final int MENULENGTH = 50;
+    public boolean playerTurn = false;
 
     //TODO:: check the seed 11!!!!!
-    /*TODO: 1.实现HUD
 
 
-     */
+
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -28,21 +28,16 @@ public class Game {
     public static void main(String[] args) {
         Game game = new Game();
         game.playWithKeyboard();
-        //game.ter.renderFrame(game.playWithInputString("n1s"));;
     }
     public void playWithKeyboard() {
         drawMainMenu();
         String menuChoice = getOneInput();
         world = initialWorld(menuChoice, playChoice.playWithKeyboard);
         play();
-        //showMessage("Your Game have been successfully saved!");
-        System.exit(0);
+        showMessage("Your Game have been successfully saved!");
     }
 
     public TETile[][] playWithInputString(String input) {
-        // TODO: Fill out this method to run the game using the input passed in,
-        // and return a 2D tile representation of the world that would have been
-        // drawn if the same inputs had been given to playWithKeyboard().
         input = input.toLowerCase();
         String movements = parseWASD(input);
         world = initialWorld(input, playChoice.playWithString);
@@ -50,8 +45,27 @@ public class Game {
         if (input.endsWith(":q")) {
             saveWorld(world);
         }
-
         return world.getMap();
+    }
+
+    public void HUD() {
+        int x = getMousePosition().getX();
+        int y = getMousePosition().getY();
+        //StdDraw.clear(Color.BLACK);
+        if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+            String description = world.getMap()[x][y].description();
+            StdDraw.setPenColor(Color.WHITE);
+            StdDraw.textLeft(1, HEIGHT, description);
+            StdDraw.show();
+        }
+
+    }
+
+    public Position getMousePosition() {
+        Position p = new Position();
+        p.x = (int) StdDraw.mouseX();
+        p.y = (int) StdDraw.mouseY();
+        return p;
     }
 
 
@@ -77,10 +91,10 @@ public class Game {
     }
 
     public void play() {
-        ter.initialize(WIDTH, HEIGHT);
+        ter.initialize(WIDTH , HEIGHT + 1);
+        playerTurn = true;
         //cheating for debugging
         //cheatCode();
-        ter.renderFrame(world.getMap());
         StringBuilder quit  = new StringBuilder();
         String moveString = "wasd";
         while(!quit.toString().endsWith(":q")) {
@@ -89,9 +103,9 @@ public class Game {
                 quit.append(movement);
             }
             movePlayer(movement);
-            ter.renderFrame(world.getMap());
         }
         saveWorld(world);
+        playerTurn = false;
 
     }
 
@@ -102,7 +116,8 @@ public class Game {
             world.playerMove(movement);
         } else if (world.getMap()[nextX][nextY].equals(Tileset.LOCKED_DOOR)) {
             world.getMap()[nextX][nextY] = Tileset.UNLOCKED_DOOR;
-            //showMessage("YOU WIN THE GAME");
+            playerTurn = false;
+            showMessage("YOU WIN THE GAME");
         } else if (world.getMap()[nextX][nextY].equals(Tileset.WALL)) {
             //showMessage("You hit the wall");
         }
@@ -141,6 +156,10 @@ public class Game {
     public String getOneInput() {
         while (true) {
             StdDraw.pause(10);
+            if (playerTurn){
+                ter.renderFrame(world.getMap());
+                HUD();
+            }
             if (StdDraw.hasNextKeyTyped()) {
                 return String.valueOf(StdDraw.nextKeyTyped());
             }
@@ -155,12 +174,18 @@ public class Game {
         //StdDraw.setXscale(0, width);
         //StdDraw.setXscale(0, height);
         StdDraw.clear(Color.BLACK);
-        Font bigFont = new Font("Monaco", Font.BOLD, 30);
+        Font bigFont = new Font("Monaco", Font.BOLD, 40);
         StdDraw.setFont(bigFont);
         StdDraw.setPenColor(Color.WHITE);
         StdDraw.text(width / 2, height / 2, message);
+        Font smallFont = new Font("Monaco", Font.BOLD, 20);
+        StdDraw.setFont(smallFont);
+        StdDraw.setPenColor(Color.YELLOW);
+        StdDraw.text(width / 2, height / 2 - 3, "Press any keys to leave");
+
         StdDraw.show();
-        //StdDraw.pause(10000);
+        getOneInput();
+        System.exit(0);
 
     }
 
@@ -171,7 +196,6 @@ public class Game {
         int midWidth = width / 2;
         int midHeight = height / 2;
         ter.initialize(MENULENGTH, MENULENGTH);
-        //StdDraw.clear(Color.BLACK);
 
         String title = "CS61B: THE GAME";
         String newGame = "New Game (N)";
@@ -187,7 +211,6 @@ public class Game {
         StdDraw.text(midWidth, midHeight - 2, quit);
         StdDraw.text(midWidth, midHeight + 2, newGame);
         StdDraw.show();
-        //StdDraw.pause(1000);
     }
 
     public long parseSeed(String input) {
@@ -201,7 +224,6 @@ public class Game {
 
 
     public long getSeed() {
-
         String enterSeed = "Enter Seed Number";
         StringBuilder sb = new StringBuilder();
         while (true) {
