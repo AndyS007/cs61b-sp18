@@ -59,6 +59,7 @@ public class MemoryGame {
         return sb.toString();
     }
 
+
     public void drawFrame(String s) {
         //TODO: Take the string and display it in the center of the screen
         //TODO: If game is not over, display relevant game information at the top of the screen
@@ -120,6 +121,10 @@ public class MemoryGame {
             StdDraw.pause(1500);
             String randomString = generateRandomString(round);
             flashSequence(randomString);
+            //clean the pressed key before the playTurn
+            while (StdDraw.hasNextKeyTyped()) {
+                StdDraw.nextKeyTyped();
+            }
             playerTurn = true;
             String answer = solicitNCharsInput(round);
             if (answer.equals(randomString)) {

@@ -42,6 +42,19 @@ public class World implements Serializable {
         this.mapGenerator();
 
     }
+    enum Movement {
+        UP, DOWN, LEFT, RIGHT;
+    }
+    public void playerMove(Movement movement) {
+        int originalX = getPlayerPosition().getX();
+        int originalY = getPlayerPosition().getY();
+        player.move(movement);
+        map[getPlayerPosition().getX()][getPlayerPosition().getY()] = Tileset.PLAYER;
+        map[originalX][originalY] = Tileset.FLOOR;
+
+
+
+    }
     public TETile[][] getMap() {
         return map;
     }
@@ -81,6 +94,12 @@ public class World implements Serializable {
                 return;
             }
         }
+    }
+    public Position getPlayerPosition() {
+        return player;
+    }
+    public Position getDoorPosition() {
+        return door;
     }
     private void GeneratePlayer(){
         while (true){

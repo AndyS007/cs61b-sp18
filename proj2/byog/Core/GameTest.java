@@ -14,8 +14,25 @@ public class GameTest {
 
     @Test
     public void playWithKeyboard() {
+        game.playWithKeyboard();
     }
 
+    @Test
+    public void playerMoveTest() {
+        TETile[][] map = game.playWithInputString("n11s");
+        tr.initialize(Game.WIDTH, Game.HEIGHT);
+        tr.renderFrame(map);
+        StdDraw.pause(1000);
+        for (int i = 0; i < 8; i++) {
+            game.movePlayer("w");
+            tr.renderFrame(map);
+            StdDraw.pause(1000);
+        }
+    }
+    @Test
+    public void getSeedTest() {
+        assertEquals(100,game.getSeed());
+    }
     @Test
     public void playWithLoad() {
         TETile[][] map = game.playWithInputString("l");
@@ -27,7 +44,7 @@ public class GameTest {
     }
     @Test
     public void playWithSeed() {
-       TETile[][] map = game.playWithInputString("n111s");
+       TETile[][] map = game.playWithInputString("n11s");
         tr.initialize(Game.WIDTH, Game.HEIGHT);
         tr.renderFrame(map);
         StdDraw.pause(1000);
@@ -46,15 +63,20 @@ public class GameTest {
 
     @Test
     public void saveAndLoadWorld() {
-        World world = new World(79,29,10);
-        tr.initialize(80, 30);
+        World world = new World(Game.WIDTH,Game.HEIGHT,10);
+        tr.initialize(Game.WIDTH, Game.HEIGHT);
         tr.renderFrame(world.getMap());
         StdDraw.pause(1000);
         game.saveWorld(world);
-        System.out.println("--------------");
 
         //tr.renderFrame(game.loadWorld().getMap());
         //StdDraw.pause(1000);
 
+    }
+
+    @Test
+    public void drawMenuTest() {
+        game.drawMainMenu();
+        StdDraw.pause(2000);
     }
 }
