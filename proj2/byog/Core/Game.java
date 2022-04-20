@@ -34,7 +34,6 @@ public class Game {
         String menuChoice = getOneInput();
         world = initialWorld(menuChoice, playChoice.playWithKeyboard);
         play();
-        showMessage("Your Game have been successfully saved!");
     }
 
     public TETile[][] playWithInputString(String input) {
@@ -106,6 +105,7 @@ public class Game {
         }
         saveWorld(world);
         playerTurn = false;
+        showMessage("Your Game have been successfully saved!");
 
     }
 
@@ -156,6 +156,7 @@ public class Game {
     public String getOneInput() {
         while (true) {
             StdDraw.pause(10);
+            //this is rather ugly but have to do this because the loop in the play is in this function
             if (playerTurn){
                 ter.renderFrame(world.getMap());
                 HUD();

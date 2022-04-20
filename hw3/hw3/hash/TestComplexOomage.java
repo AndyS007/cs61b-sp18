@@ -59,6 +59,7 @@ public class TestComplexOomage {
                     intList.set(j, 1);
                 }
 
+                String
             }
 
             deadlyList.add(new ComplexOomage(intList));
