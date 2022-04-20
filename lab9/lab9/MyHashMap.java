@@ -63,10 +63,10 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     @Override
     public void put(K key, V value) {
         if (!containsKey(key)) {
-            size++;
             if (loadFactor() > MAX_LF) {
                 resize(buckets.length * 2);
             }
+            size++;
         }
         int buckerNum = hash(key);
         buckets[buckerNum].put(key, value);
