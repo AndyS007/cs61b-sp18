@@ -63,14 +63,14 @@ public class Percolation {
     }
     public boolean isOpen(int row, int col) {
         if (!inTheRange(row, col)) {
-            throw new IllegalArgumentException("Arguments out of scope");
+            throw new IndexOutOfBoundsException("Arguments out of scope");
         }
         return grid[row][col];
 
     }
     public boolean isFull(int row, int col) {
         if (!inTheRange(row, col)) {
-            throw new IllegalArgumentException("Arguments out of scope");
+            throw new IndexOutOfBoundsException("Arguments out of scope");
         }
         int num = xyTo1D(row, col);
         return isOpen(row, col) && ufTop.connected(visualTopPoint, num);
