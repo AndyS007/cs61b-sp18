@@ -32,7 +32,7 @@ public class Percolation {
     }
     public void open(int row, int col) {
         if (!inTheRange(row, col)) {
-            throw new IllegalArgumentException("Arguments out of scope");
+            throw new IndexOutOfBoundsException("Arguments out of scope");
         }
         if (grid[row][col]) {
             return;
