@@ -27,15 +27,6 @@ public class Percolation {
         ufTop = new WeightedQuickUnionUF(N * N + 1);
         visualTopPoint = N * N;
         visualBottomPoint = N * N + 1;
-        /*
-        for (int i = 0; i < N; i++) {
-            int num = xyTo1D(0, i);
-            uf.union(visualTopPoint, num);
-            ufTop.union(visualTopPoint, num);
-            num = xyTo1D(N - 1, i);
-            uf.union(visualBottomPoint, num);
-        }
-         */
         numberOfOpenSites = 0;
 
     }
@@ -51,7 +42,8 @@ public class Percolation {
         if (row == 0) {
             uf.union(visualTopPoint, xyTo1D(row, col));
             ufTop.union(visualTopPoint, xyTo1D(row, col));
-        } else if (row == N - 1) {
+        }
+        if (row == N - 1) {
             uf.union(visualBottomPoint, xyTo1D(row, col));
         }
         int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};

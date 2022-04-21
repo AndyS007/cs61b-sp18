@@ -45,15 +45,15 @@ public class PercolationStats {
         for (double n : threshold) {
             total += Math.pow((n - mean), 2);
         }
-        return total / (TIMES - 1);
+        return Math.sqrt(total / (TIMES - 1));
 
     }
     public double confidenceLow() {
-        return mean - (1.96 * Math.sqrt(stddev) / Math.sqrt(TIMES));
+        return mean - (1.96 * stddev / Math.sqrt(TIMES));
 
     }
     public double confidenceHigh() {
-        return mean + (1.96 * Math.sqrt(stddev) / Math.sqrt(TIMES));
+        return mean + (1.96 * stddev / Math.sqrt(TIMES));
     }
 
 }
