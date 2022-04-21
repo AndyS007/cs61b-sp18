@@ -3,15 +3,15 @@ package hw2;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    boolean[][] grid;
+    private boolean[][] grid;
     // change to public when everything done.
-    WeightedQuickUnionUF uf;
-    WeightedQuickUnionUF ufTop;
+    private WeightedQuickUnionUF uf;
+    private WeightedQuickUnionUF ufTop;
 
     private int numberOfOpenSites;
-    int visualTopPoint;
-    int visualBottomPoint;
-    int N;
+    private int visualTopPoint;
+    private int visualBottomPoint;
+    private int N;
     public static void main(String[] args) {
         Percolation p = new Percolation(5);
 
@@ -27,6 +27,7 @@ public class Percolation {
         ufTop = new WeightedQuickUnionUF(N * N + 1);
         visualTopPoint = N * N;
         visualBottomPoint = N * N + 1;
+        /*
         for (int i = 0; i < N; i++) {
             int num = xyTo1D(0, i);
             uf.union(visualTopPoint, num);
@@ -34,6 +35,7 @@ public class Percolation {
             num = xyTo1D(N - 1, i);
             uf.union(visualBottomPoint, num);
         }
+         */
         numberOfOpenSites = 0;
 
     }
@@ -46,14 +48,19 @@ public class Percolation {
         }
         grid[row][col] = true;
         numberOfOpenSites++;
-        int[][] directions = {{1, 0}, {-1, 0} , {0, 1}, {0, -1}};
+        if (row == 0) {
+            uf.union(visualTopPoint, xyTo1D(row, col));
+            ufTop.union(visualTopPoint, xyTo1D(row, col));
+        } else if (row == N - 1) {
+            uf.union(visualBottomPoint, xyTo1D(row, col));
+        }
+        int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         for (int[]dir : directions) {
             int x = row + dir[0];
             int y = col + dir[1];
             if (inTheRange(x, y) && grid[x][y]) {
                 uf.union(xyTo1D(x, y), xyTo1D(row, col));
                 ufTop.union(xyTo1D(x, y), xyTo1D(row, col));
-
             }
         }
 

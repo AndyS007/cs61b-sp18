@@ -4,12 +4,11 @@ package hw2;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class PercolationStats {
-    int TIMES;
-    Percolation per;
-    int[] numberOfOpenSites;
-    double[] threshold;
-    double mean;
-    double stddev;
+    private int TIMES;
+    private Percolation per;
+    private double[] threshold;
+    private double mean;
+    private double stddev;
 
 
 
@@ -17,8 +16,8 @@ public class PercolationStats {
         if (N <= 0 || T <= 0) {
             throw new IllegalArgumentException();
         }
-        numberOfOpenSites = new int[T];
         TIMES = T;
+        threshold = new double[T];
         for (int i = 0; i < T; i++) {
             per = pf.make(N);
             while (!per.percolates()) {
@@ -26,8 +25,7 @@ public class PercolationStats {
                 int y = StdRandom.uniform(N);
                 per.open(x, y);
             }
-            numberOfOpenSites[i] = per.numberOfOpenSites();
-            threshold[i] = (double) numberOfOpenSites[i] / (N * N);
+            threshold[i] = (double) per.numberOfOpenSites() / (N * N);
 
         }
         mean = mean();
