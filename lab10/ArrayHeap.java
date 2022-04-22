@@ -116,6 +116,18 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
+        if (index*2<=size){
+            int j=index*2;
+            if (j+1<=size && contents[j+1].myPriority < contents[j].myPriority) j++;
+            if (contents[j].myPriority>=contents[index].myPriority) return;
+            swap(j, index);
+            sink(j);
+        }
+    }
+    /*
+    private void sink(int index) {
+        // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
+        validateSinkSwimArg(index);
         int smaller = min(leftIndex(index), rightIndex(index));
         while (smaller <= size && index != min(index, smaller)) {
             swap(index, smaller);
@@ -124,7 +136,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
 
         }
 
-    }
+    }*/
 
     /**
      * Inserts an item with the given priority value. This is enqueue, or offer.
@@ -330,7 +342,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     public void testSink() {
         ArrayHeap<String> pq = new ArrayHeap<>();
         pq.size = 7;
-        for (int i = 1; i <= 15; i += 1) {
+        for (int i = 1; i <= 7; i += 1) {
             pq.contents[i] = new ArrayHeap<String>.Node("x" + i, i);
         }
         // Change root's priority to a large value.
