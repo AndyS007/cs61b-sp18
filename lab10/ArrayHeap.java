@@ -117,7 +117,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
         int smaller = min(leftIndex(index), rightIndex(index));
-        while (index != min(index, smaller)) {
+        while (smaller <= size && index != min(index, smaller)) {
             swap(index, smaller);
             index = smaller;
             smaller = min(leftIndex(index), rightIndex(index));
@@ -330,7 +330,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     public void testSink() {
         ArrayHeap<String> pq = new ArrayHeap<>();
         pq.size = 7;
-        for (int i = 1; i <= 7; i += 1) {
+        for (int i = 1; i <= 15; i += 1) {
             pq.contents[i] = new ArrayHeap<String>.Node("x" + i, i);
         }
         // Change root's priority to a large value.
