@@ -104,7 +104,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        while (index != 1 && index == min(index, parentIndex(index))) {
+        while (index > 1 && index == min(index, parentIndex(index))) {
             swap(index, parentIndex(index));
             index = parentIndex(index);
         }
@@ -116,12 +116,11 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
-
         int smaller = min(leftIndex(index), rightIndex(index));
         while (index != min(index, smaller)) {
-           swap(index, smaller);
-           index = smaller;
-           smaller = min(leftIndex(index), rightIndex(index));
+            swap(index, smaller);
+            index = smaller;
+            smaller = min(leftIndex(index), rightIndex(index));
 
         }
 
@@ -170,7 +169,8 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     public T removeMin() {
         T temp = peek();
         swap(1, size);
-        contents[size--] = null;
+        contents[size] = null;
+        size--;
         sink(1);
         return temp;
     }
@@ -262,7 +262,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
             myPriority = priority;
         }
 
-        public T item(){
+        public T item() {
             return myItem;
         }
 
