@@ -1,12 +1,13 @@
 package hw2;
 
+import edu.princeton.cs.algs4.QuickFindUF;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     private boolean[][] grid;
     // change to public when everything done.
-    private WeightedQuickUnionUF uf;
-    private WeightedQuickUnionUF ufTop;
+    private QuickFindUF uf;
+    private QuickFindUF ufTop;
 
     private int numberOfOpenSites;
     private int visualTopPoint;
@@ -23,8 +24,8 @@ public class Percolation {
         }
         this.N = N;
         grid = new boolean[N][N];
-        uf = new WeightedQuickUnionUF(N * N + 2);
-        ufTop = new WeightedQuickUnionUF(N * N + 1);
+        uf = new QuickFindUF(N * N + 2);
+        ufTop = new QuickFindUF(N * N + 1);
         visualTopPoint = N * N;
         visualBottomPoint = N * N + 1;
         numberOfOpenSites = 0;

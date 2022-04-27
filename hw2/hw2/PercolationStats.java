@@ -2,6 +2,7 @@ package hw2;
 
 
 import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.Stopwatch;
 
 public class PercolationStats {
     private int TIMES;
@@ -9,6 +10,20 @@ public class PercolationStats {
     private double[] threshold;
     private double mean;
     private double stddev;
+
+    public static void main(String[] args) {
+        int N = 20;
+        int times = 100;
+        PercolationFactory pf = new PercolationFactory();
+        for (int i = 0; i < 5; i += 1) {
+            Stopwatch timer = new Stopwatch();
+            new PercolationStats(N, times, pf);
+            double time = timer.elapsedTime();
+            System.out.println(N + ": " + time);
+            N *= 2;
+        }
+
+    }
 
 
 
