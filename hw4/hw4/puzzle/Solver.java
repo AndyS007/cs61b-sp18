@@ -6,11 +6,10 @@ import edu.princeton.cs.algs4.MinPQ;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.ArrayList;
 public class Solver {
     private MinPQ<SearchNode> pq;
-    List<WorldState> list;
+    private List<WorldState> solutions;
 
 
     private class SearchNode implements Comparable<SearchNode> {
@@ -18,7 +17,7 @@ public class Solver {
         int moves;
         int priority;
         SearchNode previous;
-       SearchNode(WorldState word, int moves, SearchNode previous) {
+        SearchNode(WorldState word, int moves, SearchNode previous) {
             this.word = word;
             this.moves = moves;
             this.priority = moves + word.estimatedDistanceToGoal();
@@ -33,7 +32,7 @@ public class Solver {
     }
     public Solver(WorldState initial) {
         pq = new MinPQ<>();
-        list = new ArrayList<>();
+        solutions = new ArrayList<>();
         pq.insert(new SearchNode(initial, 0, null));
         while (!pq.min().word.isGoal()) {
             SearchNode node = pq.delMin();
@@ -59,10 +58,10 @@ public class Solver {
             tmp = tmp.previous;
         }
         while (!stack.isEmpty()) {
-            list.add(stack.pop());
+            solutions.add(stack.pop());
         }
 
-        return list;
+        return solutions;
 
     }
 }
