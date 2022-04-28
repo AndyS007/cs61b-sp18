@@ -20,17 +20,29 @@ public class Board implements WorldState {
      * toString():   Returns the string representation of the board. This
      *               method is provided in the skeleton
      */
-    private int[][] tiles;
+    private int[][] start;
     private static final int BLANK = 0;
     private int size;
+    public static void main(String[] args) {
+        int[][] tmp = {{1, 2}, {0, 3}};
+        Board b = new Board(tmp);
+        System.out.println(b.neighbors());
+
+    }
 
     public Board(int[][] tiles) {
-        this.tiles = tiles;
+
         size = tiles.length;
+        start = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++){
+                start[i][j] = tiles[i][j];
+            }
+        }
 
     }
     public int tileAt(int i, int j) {
-        return tiles[i][j];
+        return start[i][j];
 
     }
     public int size() {
@@ -48,7 +60,6 @@ public class Board implements WorldState {
                 if (tileAt(i, j) == BLANK) {
                     blankRow = i;
                     blankCol = j;
-                    break;
                 }
             }
         }
@@ -75,18 +86,70 @@ public class Board implements WorldState {
 
     }
     public int hamming() {
-        return 0;
+        int total = 0;
+        for (int i = 0; i < size(); i++) {
+            for (int j = 0; j < size(); j++) {
+                int val = tileAt(i, j);
+                if (val == BLANK) {
+                    continue;
+                }
+                if (toRow(val) != i || toCol(val) != j) {
+                    total += 1;
+                }
+
+            }
+        }
+
+        return total;
 
     }
     public int manhattan() {
+        int total = 0;
+        for (int i = 0; i < size(); i++) {
+            for (int j = 0; j < size(); j++) {
+                int tmp = tileAt(i, j);
+                if (tmp == BLANK) {
+                    continue;
+                }
+                if (toRow(tmp) != i || toCol(tmp) != j) {
+                    total += Math.abs(i - toRow(tmp)) + Math.abs(j - toCol(tmp));
 
-        return 0;
+                }
+            }
+        }
+
+        return total;
+    }
+    private int toRow(int n) {
+        return (n - 1) / size();
+    }
+    private int toCol(int n) {
+        return (n - 1) % size();
+
     }
     public int estimatedDistanceToGoal() {
 
-        return 0;
+        return manhattan();
     }
-    public boolean equals(Object y) {
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Board other = (Board) o;
+        if (other.size() != size()) {
+            return false;
+        }
+        for (int i = 0; i < size(); i++) {
+            for (int j = 0; j < size(); j++) {
+                if (this.tileAt(i, j) != other.tileAt(i, j)) {
+                    return false;
+                }
+            }
+        }
+
         return true;
 
     }

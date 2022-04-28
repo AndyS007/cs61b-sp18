@@ -92,7 +92,7 @@ public class TestSolver {
         return start;
     }
 
-    @Test(timeout = 1000)
+    @Test
     public void test2x2BoardPuzzles() {
         for (int i = 0; i <= 6; i += 1) {
             String pnum = String.format("%02d", i);
@@ -131,9 +131,9 @@ public class TestSolver {
         }
     }
 
-    @Test(timeout = 20000)
+    @Test
     public void testVariousPuzzles() {
-        for (int i = 0; i <= 31; i += 1) {
+        for (int i = 0; i <= 50; i += 1) {
             String pnum = String.format("%02d", i);
             String puzzleName = "input/puzzle" + pnum + ".txt";
             Board b = readBoard(puzzleName);
