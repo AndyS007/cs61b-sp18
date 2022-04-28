@@ -23,19 +23,13 @@ public class Board implements WorldState {
     private int[][] start;
     private static final int BLANK = 0;
     private int size;
-    public static void main(String[] args) {
-        int[][] tmp = {{1, 2}, {0, 3}};
-        Board b = new Board(tmp);
-        System.out.println(b.neighbors());
-
-    }
 
     public Board(int[][] tiles) {
 
         size = tiles.length;
         start = new int[size][size];
         for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++){
+            for (int j = 0; j < size; j++) {
                 start[i][j] = tiles[i][j];
             }
         }
@@ -161,7 +155,7 @@ public class Board implements WorldState {
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i,j)));
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }
@@ -169,4 +163,7 @@ public class Board implements WorldState {
         return s.toString();
     }
 
+    public int hashCode() {
+        return 0;
+    }
 }

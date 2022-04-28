@@ -1,9 +1,15 @@
 package hw4.puzzle;
 
-import java.util.*;
 
+import edu.princeton.cs.algs4.MinPQ;
+
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.ArrayList;
 public class Solver {
-    PriorityQueue<SearchNode> pq;
+    private MinPQ<SearchNode> pq;
     List<WorldState> list;
 
 
@@ -12,7 +18,7 @@ public class Solver {
         int moves;
         int priority;
         SearchNode previous;
-        public SearchNode(WorldState word, int moves, SearchNode previous) {
+       SearchNode(WorldState word, int moves, SearchNode previous) {
             this.word = word;
             this.moves = moves;
             this.priority = moves + word.estimatedDistanceToGoal();
@@ -26,14 +32,14 @@ public class Solver {
         }
     }
     public Solver(WorldState initial) {
-        pq = new PriorityQueue<>();
+        pq = new MinPQ<>();
         list = new ArrayList<>();
-        pq.add(new SearchNode(initial, 0, null));
-        while (!pq.peek().word.isGoal()) {
-            SearchNode node = pq.remove();
+        pq.insert(new SearchNode(initial, 0, null));
+        while (!pq.min().word.isGoal()) {
+            SearchNode node = pq.delMin();
             for (WorldState ws : node.word.neighbors()) {
                 if (node.previous == null || !ws.equals(node.previous.word)) {
-                    pq.add(new SearchNode(ws, node.moves + 1, node));
+                    pq.insert(new SearchNode(ws, node.moves + 1, node));
                 }
 
             }
@@ -42,12 +48,12 @@ public class Solver {
 
     }
     public int moves() {
-        return pq.peek().moves;
+        return pq.min().moves;
 
     }
     public Iterable<WorldState> solution() {
         Deque<WorldState> stack = new LinkedList<>();
-        SearchNode tmp = pq.peek();
+        SearchNode tmp = pq.min();
         while (tmp != null) {
             stack.push(tmp.word);
             tmp = tmp.previous;
