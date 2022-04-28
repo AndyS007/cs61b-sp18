@@ -1,5 +1,7 @@
 package hw4.puzzle;
 
+import edu.princeton.cs.algs4.Queue;
+
 public class Board implements WorldState {
 
     /**
@@ -18,8 +20,10 @@ public class Board implements WorldState {
      * toString():   Returns the string representation of the board. This
      *               method is provided in the skeleton
      */
-    int[][] tiles;
-    int size;
+    private int[][] tiles;
+    private static final int BLANK = 0;
+    private int size;
+
     public Board(int[][] tiles) {
         this.tiles = tiles;
         size = tiles.length;
@@ -34,7 +38,40 @@ public class Board implements WorldState {
 
     }
     public Iterable<WorldState> neighbors() {
-        return null;
+        Queue<WorldState> neighbors = new Queue<>();
+        int N = size();
+        int blankRow = -1;
+        int blankCol = -1;
+        // find the BLANK
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (tileAt(i, j) == BLANK) {
+                    blankRow = i;
+                    blankCol = j;
+                    break;
+                }
+            }
+        }
+        // copy the board
+        int[][] aBoard = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                aBoard[i][j] = tileAt(i, j);
+            }
+        }
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (Math.abs(-blankRow + i) + Math.abs(j - blankCol) - 1 == 0) {
+                    aBoard[blankRow][blankCol] = aBoard[i][j];
+                    aBoard[i][j] = BLANK;
+                    Board neighbor = new Board(aBoard);
+                    neighbors.enqueue(neighbor);
+                    aBoard[i][j] = aBoard[blankRow][blankCol];
+                    aBoard[blankRow][blankCol] = BLANK;
+                }
+            }
+        }
+        return neighbors;
 
     }
     public int hamming() {
