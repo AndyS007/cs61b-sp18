@@ -91,8 +91,9 @@ public class QuickSort {
         //Queue<Queue<String>> tmp = makeSingleItemQueues(students);
         //Queue<String> sortedStudents = mergeSortedQueues(students, students2);
         System.out.println("Before: " + students);
-        Queue<String> sortedStudents = quickSort(students);
-        System.out.println("After: " + sortedStudents);
+        //Queue<String> sortedStudents = quickSort(students);
+        students = quickSort(students);
+        System.out.println("After: " + students);
 
     }
 }

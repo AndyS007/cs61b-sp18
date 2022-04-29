@@ -18,7 +18,7 @@ public class MergeSort {
         //Queue<Queue<String>> tmp = makeSingleItemQueues(students);
         //Queue<String> sortedStudents = mergeSortedQueues(students, students2);
         System.out.println("Before: " + students);
-        mergeSort(students);
+        students = mergeSort(students);
         System.out.println("After: " + students);
 
     }
@@ -92,11 +92,19 @@ public class MergeSort {
             return items;
         }
         Queue<Item> leftHalf = new Queue<>();
-        Queue<Item> rightHalf;
+        Queue<Item> rightHalf = new Queue<>();
+        /*
         while (items.size() > size / 2) {
             leftHalf.enqueue(items.dequeue());
         }
-        rightHalf = items;
+         */
+        for (Item item : items) {
+            if (leftHalf.size() < size / 2) {
+                leftHalf.enqueue(item);
+            } else {
+                rightHalf.enqueue(item);
+            }
+        }
         leftHalf = mergeSort(leftHalf);
         rightHalf = mergeSort(rightHalf);
         items = mergeSortedQueues(leftHalf, rightHalf);
