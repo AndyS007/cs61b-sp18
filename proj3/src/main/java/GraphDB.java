@@ -21,18 +21,23 @@ public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
     private Map<Long, Node> nodes = new HashMap<>();
+    private Map<Long, Node> cleanNodes = new HashMap<>();
     private final Set<Edge> edges = new HashSet<>();
+
+    public static void main(String[] args) {
+        GraphDB g = new GraphDB("../library-sp18/data/berkeley-2018.osm.xml");
+        System.out.println("Total edges :" + g.edges.size());
+        for (Edge e : g.edges) {
+           if (e.name == null) {
+               System.out.println("find nameless edge");
+           }
+        }
+    }
 
     static class Edge {
         String name;
         //int maxSpeed;
         List<Node> way;
-        /*
-        public boolean contains(Node otherNode){
-            //TODO: maybe wrong!!
-            return way.contains(otherNode);
-        }
-         */
         public void setWay(List<Node> w) {
             this.way = w;
         }
@@ -50,6 +55,7 @@ public class GraphDB {
         double lat;
         String name;
         Set<Long> neighbor;
+        //Map<Long, String> neighbor;
 
         public Node(String id, String lon, String lat) {
             this.id = Long.parseLong(id);
@@ -88,6 +94,7 @@ public class GraphDB {
             e.printStackTrace();
         }
         clean();
+
     }
 
     /**
@@ -106,17 +113,22 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        // TODO: Your code here.
-        Map<Long, Node> cleanNodes = new HashMap<>();
+        cleanNodes = new HashMap<>();
+        Edge useless = null;
         for (Edge e : edges) {
             for(Node n : e.way) {
                 if (!n.neighbor.isEmpty()) {
-                    //System.out.println("isolated point found! name: " + n.name + "way name: " + e.name);
                     cleanNodes.put(n.id, n);
+                } else {
+                    //System.out.println("isolated point found! name: " + n.name + "way name: " + e.name + "way element: ");
+                    useless = e;
                 }
+
+
             }
         }
-        nodes = cleanNodes;
+        edges.remove(useless);
+
 
     }
 
@@ -125,7 +137,7 @@ public class GraphDB {
      * @return An iterable of id's of all vertices in the graph.
      */
     Iterable<Long> vertices() {
-        return nodes.keySet();
+        return cleanNodes.keySet();
 
     }
 
@@ -135,7 +147,7 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        Node n = nodes.get(v);
+        Node n = cleanNodes.get(v);
         return n.neighbor;
     }
 

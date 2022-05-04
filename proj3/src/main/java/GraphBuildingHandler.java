@@ -87,7 +87,6 @@ public class GraphBuildingHandler extends DefaultHandler {
             lastEdge = e;
         } else if (activeState.equals("way") && qName.equals("nd")) {
 
-            /* TODO Use the above id to make "possible" connections between the nodes in this way */
             /* Hint1: It would be useful to remember what was the last node in this way. */
             /* Hint2: Not all ways are valid. So, directly connecting the nodes here would be
             cumbersome since you might have to remove the connections if you later see a tag that
@@ -101,11 +100,8 @@ public class GraphBuildingHandler extends DefaultHandler {
             String v = attributes.getValue("v");
             if (k.equals("maxspeed")) {
                 //System.out.println("Max Speed: " + v);
-                /* TODO set the max speed of the "current way" here. */
             } else if (k.equals("highway")) {
                 //System.out.println("Highway type: " + v);
-                /* TODO Figure out whether this way and its connections are valid. */
-                /* Hint: Setting a "flag" is good enough! */
                 if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
                     valid = true;
                 }
@@ -120,7 +116,6 @@ public class GraphBuildingHandler extends DefaultHandler {
             //System.out.println("Node's name: " + attributes.getValue("v"));
         }
     }
-    private int counter = 1;
 
     /**
      * Receive notification of the end of an element. You may want to take specific terminating
@@ -142,9 +137,6 @@ public class GraphBuildingHandler extends DefaultHandler {
             if (valid) {
                 g.addEdge(lastEdge);
                 lastEdge.setWay(tmpNodes);
-                if (tmpNodes.size() == 1) {
-                    System.out.println("single point way dected, type: " + lastEdge.name);
-                }
                 GraphDB.Node[] nodeArray = new GraphDB.Node[tmpNodes.size()];
                 nodeArray = tmpNodes.toArray(nodeArray);
                 for (int i = 0; i < nodeArray.length; i++) {
@@ -159,7 +151,6 @@ public class GraphBuildingHandler extends DefaultHandler {
             lastEdge = null;
             valid = false;
             activeState = "";
-            //System.out.println("Finishing a way..." + counter++);
         }
     }
 
