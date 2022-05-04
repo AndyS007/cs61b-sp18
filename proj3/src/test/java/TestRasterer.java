@@ -30,6 +30,21 @@ public class TestRasterer {
     public void setUp() throws Exception {
         rasterer = new Rasterer();
     }
+    /*
+    @Test
+    public void testSearch() {
+        assertEquals(2, rasterer.binarySearch(0, 10, 1.4, 1));
+        assertEquals(1, rasterer.binarySearch(0, 10, 1.4, 2));
+        assertEquals(10, rasterer.binarySearch(0, 10, 9.4, 1));
+        assertEquals(1, rasterer.binarySearch(0, 10, 0.4, 1));
+        assertEquals(2, rasterer.binarySearch(0, 10, 1, 1));
+        assertEquals(8, rasterer.binarySearch(0, 10, 7, 1));
+        assertEquals(10, rasterer.binarySearch(0, 10, 11, 1));
+        assertEquals(10, rasterer.binarySearch(0, 10, 10, 1));
+        assertEquals(0, rasterer.binarySearch(0, 10, -0.4, 1));
+    }
+
+     */
 
     @Test
     public void testGetMapRaster() throws Exception {
