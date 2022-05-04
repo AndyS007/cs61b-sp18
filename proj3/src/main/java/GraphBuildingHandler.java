@@ -82,8 +82,8 @@ public class GraphBuildingHandler extends DefaultHandler {
             activeState = "way";
             valid = false;
             lastNode = null;
-            GraphDB.Edge e = new GraphDB.Edge();
-            tmpNodes = new LinkedList<>();
+            //tmpNodes = new LinkedList<>();
+            GraphDB.Edge e = new GraphDB.Edge(new LinkedList<>());
             lastEdge = e;
         } else if (activeState.equals("way") && qName.equals("nd")) {
 
@@ -93,7 +93,8 @@ public class GraphBuildingHandler extends DefaultHandler {
             makes this way invalid. Instead, think of keeping a list of possible connections and
             remember whether this way is valid or not. */
             long id = Long.parseLong(attributes.getValue("ref"));
-            tmpNodes.addLast(g.getNode(id));
+            lastEdge.add(g.getNode(id));
+            //tmpNodes.addLast(g.getNode(id));
         } else if (activeState.equals("way") && qName.equals("tag")) {
             /* While looking at a way, we found a <tag...> tag. */
             String k = attributes.getValue("k");
@@ -136,17 +137,8 @@ public class GraphBuildingHandler extends DefaultHandler {
             chance to actually connect the nodes together if the way is valid. */
             if (valid) {
                 g.addEdge(lastEdge);
-                lastEdge.setWay(tmpNodes);
-                GraphDB.Node[] nodeArray = new GraphDB.Node[tmpNodes.size()];
-                nodeArray = tmpNodes.toArray(nodeArray);
-                for (int i = 0; i < nodeArray.length; i++) {
-                    if (i + 1 < nodeArray.length) {
-                        nodeArray[i].neighbor.add(nodeArray[i + 1].id);
-                    }
-                    if (i - 1 >= 0) {
-                        nodeArray[i].neighbor.add(nodeArray[i - 1].id);
-                    }
-                }
+                //lastEdge.setWay(tmpNodes);
+
             }
             lastEdge = null;
             valid = false;

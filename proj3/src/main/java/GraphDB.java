@@ -22,46 +22,51 @@ public class GraphDB {
      * creating helper classes, e.g. Node, Edge, etc. */
     private Map<Long, Node> nodes = new HashMap<>();
     private Map<Long, Node> cleanNodes = new HashMap<>();
-    private final Set<Edge> edges = new HashSet<>();
 
-    public static void main(String[] args) {
-        GraphDB g = new GraphDB("../library-sp18/data/berkeley-2018.osm.xml");
-        System.out.println("Total edges :" + g.edges.size());
-        for (Edge e : g.edges) {
-           if (e.name == null) {
-               System.out.println("find nameless edge");
-           }
-        }
-    }
 
     static class Edge {
         String name;
         //int maxSpeed;
         List<Node> way;
-        public void setWay(List<Node> w) {
-            this.way = w;
+        public Edge(List<Node> way) {
+            this.way = way;
+            this.name = null;
         }
         public void setName(String name) {
             this.name = name;
         }
-
+        public void add(Node node) {
+            way.add(node);
+        }
+        public int size() {
+            return way.size();
+        }
     }
     void addEdge(Edge e) {
-        edges.add(e);
+        Node[] nodeArray = new Node[e.size()];
+        nodeArray = e.way.toArray(nodeArray);
+        for (int i = 0; i < nodeArray.length; i++) {
+            if (i + 1 < nodeArray.length) {
+                nodeArray[i].neighbor.put(nodeArray[i + 1].id, e.name);
+            }
+            if (i - 1 >= 0) {
+                nodeArray[i].neighbor.put(nodeArray[i - 1].id, e.name);
+            }
+        }
     }
     static class Node {
         long id;
         double lon;
         double lat;
         String name;
-        Set<Long> neighbor;
-        //Map<Long, String> neighbor;
+        //Set<Long> neighbor;
+        Map<Long, String> neighbor;
 
         public Node(String id, String lon, String lat) {
             this.id = Long.parseLong(id);
             this.lon = Double.parseDouble(lon);
             this.lat = Double.parseDouble(lat);
-            this.neighbor = new HashSet<>();
+            this.neighbor = new HashMap<>();
 
         }
         public void setName(String name) {
@@ -114,6 +119,16 @@ public class GraphDB {
      */
     private void clean() {
         cleanNodes = new HashMap<>();
+        for (Node n : nodes.values()) {
+            if (!n.neighbor.isEmpty()) {
+                for (long id : n.neighbor.keySet()) {
+                    cleanNodes.put(id, nodes.get(id));
+
+                }
+            }
+        }
+
+        /*
         Edge useless = null;
         for (Edge e : edges) {
             for(Node n : e.way) {
@@ -128,8 +143,7 @@ public class GraphDB {
             }
         }
         edges.remove(useless);
-
-
+         */
     }
 
     /**
@@ -148,7 +162,7 @@ public class GraphDB {
      */
     Iterable<Long> adjacent(long v) {
         Node n = cleanNodes.get(v);
-        return n.neighbor;
+        return n.neighbor.keySet();
     }
 
     /**
