@@ -29,7 +29,7 @@ public class GraphDB {
         String name;
         //int maxSpeed;
         List<Node> way;
-        public Edge(List<Node> way) {
+        Edge(List<Node> way) {
             this.way = way;
             this.name = null;
         }
@@ -64,7 +64,7 @@ public class GraphDB {
         //long for ID, String for name of the way;
         Map<Long, String> neighbor;
 
-        public Node(String id, String lon, String lat) {
+        Node(String id, String lon, String lat) {
             this.id = Long.parseLong(id);
             this.lon = Double.parseDouble(lon);
             this.lat = Double.parseDouble(lat);
@@ -132,23 +132,6 @@ public class GraphDB {
                 }
             }
         }
-
-        /*
-        Edge useless = null;
-        for (Edge e : edges) {
-            for(Node n : e.way) {
-                if (!n.neighbor.isEmpty()) {
-                    cleanNodes.put(n.id, n);
-                } else {
-                    //System.out.println("isolated point found! name: " + n.name + "way name: " + e.name + "way element: ");
-                    useless = e;
-                }
-
-
-            }
-        }
-        edges.remove(useless);
-         */
     }
 
     /**

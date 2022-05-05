@@ -63,12 +63,13 @@ public class Router {
         }
         return path;
     }
-    static class SearchNode implements Comparable<SearchNode>{
+    static class SearchNode implements Comparable<SearchNode> {
         long id;
         double distanceFromSource;
         double priority;
         SearchNode previous;
-        public SearchNode(long id, double distanceFromSource, double priority, SearchNode previous) {
+        SearchNode(long id, double distanceFromSource,
+                          double priority, SearchNode previous) {
             this.id = id;
             this.distanceFromSource = distanceFromSource;
             this.priority = priority;
