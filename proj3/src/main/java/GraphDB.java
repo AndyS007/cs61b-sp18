@@ -24,6 +24,7 @@ public class GraphDB {
     private Map<Long, Node> cleanNodes = new HashMap<>();
 
 
+
     static class Edge {
         String name;
         //int maxSpeed;
@@ -60,6 +61,7 @@ public class GraphDB {
         double lat;
         String name;
         //Set<Long> neighbor;
+        //long for ID, String for name of the way;
         Map<Long, String> neighbor;
 
         public Node(String id, String lon, String lat) {
@@ -71,6 +73,9 @@ public class GraphDB {
         }
         public void setName(String name) {
             this.name = name;
+        }
+        public long getId() {
+            return this.id;
         }
     }
     void addNode(Node n) {
@@ -161,7 +166,8 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        Node n = cleanNodes.get(v);
+        //Node n = cleanNodes.get(v);
+        Node n = nodes.get(v);
         return n.neighbor.keySet();
     }
 
@@ -225,7 +231,7 @@ public class GraphDB {
     long closest(double lon, double lat) {
         long closestID = 0;
         double min = Double.MAX_VALUE;
-        for (Node n : nodes.values()) {
+        for (Node n : cleanNodes.values()) {
             double tmpDistance = distance(n.lon, n.lat, lon, lat);
             if (tmpDistance < min) {
                 closestID = n.id;

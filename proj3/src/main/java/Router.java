@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,9 +24,61 @@ public class Router {
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+        PriorityQueue<SearchNode> pq = new PriorityQueue<>();
+        long source = g.closest(stlon, stlat);
+        long target = g.closest(destlon, destlat);
+        Map<Long, Double> best = initializeBest(g);
+        best.put(source, 0.0);
+        pq.add(new SearchNode(source, 0, 0, null));
+        while (!pq.isEmpty() && pq.peek().id != target) {
+            SearchNode current = pq.remove();
+            for (long next : g.adjacent(current.id)) {
+                double distance = best.get(current.id) + g.distance(current.id, next);
+                if (best.get(next) > distance) {
+                    best.put(next, distance);
+                    double priority = distance + g.distance(next, target);
+                    pq.add(new SearchNode(next, distance, priority, current));
+                }
+            }
+        }
+        return path(pq.peek());
     }
-
+    private static Map<Long, Double> initializeBest(GraphDB g) {
+        Map<Long, Double> bestMap = new HashMap<>();
+        for (long nodeID : g.vertices()) {
+            bestMap.put(nodeID, Double.MAX_VALUE);
+        }
+        return bestMap;
+    }
+    private static List<Long> path(SearchNode target) {
+        Deque<Long> stack = new LinkedList<>();
+        List<Long> path = new ArrayList<>();
+        SearchNode tmp = target;
+        while (tmp != null) {
+            stack.push(tmp.id);
+            tmp = tmp.previous;
+        }
+        while (!stack.isEmpty()) {
+            path.add(stack.pop());
+        }
+        return path;
+    }
+    static class SearchNode implements Comparable<SearchNode>{
+        long id;
+        double distanceFromSource;
+        double priority;
+        SearchNode previous;
+        public SearchNode(long id, double distanceFromSource, double priority, SearchNode previous) {
+            this.id = id;
+            this.distanceFromSource = distanceFromSource;
+            this.priority = priority;
+            this.previous = previous;
+        }
+        @Override
+        public int compareTo(SearchNode o) {
+            return Double.compare(this.priority, o.priority);
+        }
+    }
     /**
      * Create the list of directions corresponding to a route on the graph.
      * @param g The graph to use.
