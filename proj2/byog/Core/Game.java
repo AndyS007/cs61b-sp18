@@ -1,5 +1,12 @@
 package byog.Core;
 
+import byog.Core.EnumType.InputType;
+import byog.Core.EnumType.Movement;
+import byog.Core.InputDevices.InputSource;
+import byog.Core.InputDevices.KeyboardInputSource;
+import byog.Core.InputDevices.StringInputSource;
+import byog.Core.WorldGeneration.Position;
+import byog.Core.WorldGeneration.World;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
@@ -11,13 +18,21 @@ import java.io.*;
 public class Game {
     TERenderer ter = new TERenderer();
     World world;
+    //for simplifying the codes
+    Position player;
+    TETile[][] map;
+    InputSource inputSource;
+
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 50;
-    public static final int MENULENGTH = 50;
+    public static final int MENU_LENGTH = 50;
     public boolean playerTurn = false;
 
     //TODO:: check the seed 11!!!!!
+    public Game() {
+
+    }
 
 
 
@@ -29,24 +44,75 @@ public class Game {
         Game game = new Game();
         game.playWithKeyboard();
     }
+
+    public World generateWorld(InputSource inputSource) {
+        char option = inputSource.getOption();
+        switch(option) {
+            case 'n': {
+                long seed = inputSource.getSeed();
+                return new World(WIDTH, HEIGHT, seed);
+            }
+            case 'l': {
+                return loadWorld();
+            }
+            case 'q': {
+                System.exit(0);
+            }
+        }
+        return null;
+    }
+    public void play(InputSource inputSource, InputType inputType) {
+
+        if (inputType == InputType.KEYBOARD) {
+            ter.initialize(WIDTH, HEIGHT);
+            ter.renderFrame(world.getMap());
+        }
+        while (!inputSource.isOver()) {
+            char c = inputSource.getMovementOrInstruction();
+            if (inputSource.isMovement(c)) {
+                movePlayer(c);
+                if (inputType == InputType.KEYBOARD) {
+                    ter.renderFrame(world.getMap());
+                }
+            }
+        }
+        if (inputSource.endsWithSave()) {
+            saveWorld(world);
+            if (inputType == InputType.KEYBOARD) {
+                showMessage("Your Game have been successfully saved!");
+            }
+        }
+        if (inputType == InputType.KEYBOARD) {
+            showMessage("You End The Game");
+        }
+
+
+    }
     public void playWithKeyboard() {
-        drawMainMenu();
-        String menuChoice = getOneInput();
-        world = initialWorld(menuChoice, playChoice.playWithKeyboard);
-        play();
+        inputSource = new KeyboardInputSource(MENU_LENGTH);
+        world = generateWorld(inputSource);
+        play(inputSource, InputType.KEYBOARD);
     }
 
     public TETile[][] playWithInputString(String input) {
-        input = input.toLowerCase();
-        String movements = parseWASD(input);
-        world = initialWorld(input, playChoice.playWithString);
-        movePlayer(movements);
-        if (input.endsWith(":q")) {
+        inputSource = new StringInputSource(input);
+        world = generateWorld(inputSource);
+        play(inputSource, InputType.STRING);
+        /*
+        while (!inputSource.isGameOver()) {
+            char c  = inputSource.getMovementOrInstruction();
+            if (inputSource.isMovement(c)) {
+                movePlayer(c);
+            }
+        }
+        if (inputSource.endsWithSave()) {
             saveWorld(world);
         }
+         */
         return world.getMap();
     }
 
+    /*
     public void HUD() {
         int x = getMousePosition().getX();
         int y = getMousePosition().getY();
@@ -60,6 +126,8 @@ public class Game {
 
     }
 
+     */
+/*
     public Position getMousePosition() {
         Position p = new Position();
         p.x = (int) StdDraw.mouseX();
@@ -67,10 +135,11 @@ public class Game {
         return p;
     }
 
+ */
 
-    enum playChoice{
-        playWithKeyboard, playWithString
-    }
+
+
+    /*
     public String parseWASD(String input) {
         String movements = "wasd";
         StringBuilder sb = new StringBuilder();
@@ -88,28 +157,10 @@ public class Game {
         world.player.y = world.getDoorPosition().getY() + 1;
         world.getMap()[world.player.getX()][world.player.getY()] = Tileset.PLAYER;
     }
+     */
 
-    public void play() {
-        ter.initialize(WIDTH , HEIGHT + 1);
-        playerTurn = true;
-        //cheating for debugging
-        //cheatCode();
-        StringBuilder quit  = new StringBuilder();
-        String moveString = "wasd";
-        while(!quit.toString().endsWith(":q")) {
-            String movement = getOneInput();
-            if (!moveString.contains(movement)) {
-                quit.append(movement);
-            }
-            movePlayer(movement);
-        }
-        saveWorld(world);
-        playerTurn = false;
-        showMessage("Your Game have been successfully saved!");
 
-    }
-
-    public void handleMovements(World.Movement movement) {
+    public void handleMovements(Movement movement) {
         int nextX = world.player.nextPosition(movement).getX();
         int nextY = world.player.nextPosition(movement).getY();
         if (world.getMap()[nextX][nextY].equals(Tileset.FLOOR)) {
@@ -124,49 +175,33 @@ public class Game {
 
     }
 
-    public void movePlayer(String movements) {
 
-        for (int i = 0; i < movements.length(); i++) {
-            char move = movements.charAt(i);
-                    switch (move) {
-                case 'w' :{
-                    handleMovements(World.Movement.UP);
-                    break;
-                }
-                case 'a' : {
-                    handleMovements(World.Movement.LEFT);
-                    break;
-                }
-                case 's' : {
-                    handleMovements(World.Movement.DOWN);
-                    break;
-                }
-                case 'd' : {
-                    handleMovements(World.Movement.RIGHT);
-                    break;
-                }
-                default : {
-                    break;
-                }
-            }
+    public void movePlayer(char movement) {
+        Movement m = charToMovement(movement);
+        handleMovements(m);
 
-        }
-    }
-
-    public String getOneInput() {
-        while (true) {
-            StdDraw.pause(10);
-            //this is rather ugly but have to do this because the loop in the play is in this function
-            if (playerTurn){
-                ter.renderFrame(world.getMap());
-                HUD();
-            }
-            if (StdDraw.hasNextKeyTyped()) {
-                return String.valueOf(StdDraw.nextKeyTyped());
-            }
-        }
 
     }
+    //input must be wasd
+    private Movement charToMovement(char movement) {
+        switch (movement) {
+            case 'w' : {
+                return Movement.UP;
+            }
+            case 's' : {
+                return Movement.DOWN;
+            }
+            case 'a' : {
+                return Movement.LEFT;
+            }
+            case 'd' : {
+                return Movement.RIGHT;
+            }
+        }
+        return null;
+    }
+
+
 
     public void showMessage(String message) {
         int height = HEIGHT;
@@ -185,87 +220,10 @@ public class Game {
         StdDraw.text(width / 2, height / 2 - 3, "Press any keys to leave");
 
         StdDraw.show();
-        getOneInput();
+        //getOneInput();
+        inputSource.getNextKey();
         System.exit(0);
 
-    }
-
-    public void drawMainMenu() {
-        int height = MENULENGTH;
-        int width = MENULENGTH;
-        int titleHeight = height * 2 / 3;
-        int midWidth = width / 2;
-        int midHeight = height / 2;
-        ter.initialize(MENULENGTH, MENULENGTH);
-
-        String title = "CS61B: THE GAME";
-        String newGame = "New Game (N)";
-        String loadGame = "Load Game (L)";
-        String quit = "Quit (Q)";
-        Font bigFont = new Font("Monaco", Font.BOLD, 30);
-        StdDraw.setFont(bigFont);
-        StdDraw.setPenColor(Color.WHITE);
-        StdDraw.text(midWidth, titleHeight, title);
-        Font smallFont = new Font("Monaco", Font.BOLD, 20);
-        StdDraw.setFont(smallFont);
-        StdDraw.text(midWidth, midHeight, loadGame);
-        StdDraw.text(midWidth, midHeight - 2, quit);
-        StdDraw.text(midWidth, midHeight + 2, newGame);
-        StdDraw.show();
-    }
-
-    public long parseSeed(String input) {
-        input = input.toLowerCase();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; input.charAt(i) != 's'; i++) {
-            sb.append(input.charAt(i));
-        }
-        return Long.parseLong(sb.toString());
-    }
-
-
-    public long getSeed() {
-        String enterSeed = "Enter Seed Number";
-        StringBuilder sb = new StringBuilder();
-        while (true) {
-            StdDraw.clear(Color.BLACK);
-            StdDraw.text((double) MENULENGTH / 2, (double) MENULENGTH / 2, enterSeed);
-            StdDraw.text((double) MENULENGTH / 2, (double) MENULENGTH / 2 - 2, sb.toString());
-            StdDraw.show();
-            String input = getOneInput();
-            if (input.equals("s")) {
-                break;
-            }
-            sb.append(input);
-        }
-
-        return Long.parseLong(sb.toString());
-    }
-
-    public World initialWorld(String input, playChoice choice) {
-        switch(input.charAt(0)) {
-            case 'n': {
-                if (choice == playChoice.playWithString) {
-                    long seed = parseSeed(input.substring(1));
-                    return new World(WIDTH, HEIGHT, seed);
-                } else if (choice == playChoice.playWithKeyboard) {
-                    long seed = getSeed();
-                    return new World(WIDTH, HEIGHT, seed);
-
-                }
-            }
-            case 'l': {
-                return loadWorld();
-            }
-            case 'q': {
-                System.exit(0);
-            }
-            default: {
-                System.out.println("Invalid input");
-                System.exit(0);
-            }
-        }
-        return null;
     }
 
     public World loadWorld() {

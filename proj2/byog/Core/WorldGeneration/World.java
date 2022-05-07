@@ -1,5 +1,6 @@
-package byog.Core;
+package byog.Core.WorldGeneration;
 
+import byog.Core.EnumType.Movement;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
@@ -41,9 +42,11 @@ public class World implements Serializable {
         this.mapGenerator();
 
     }
-    enum Movement {
+    /*
+    public enum Movement {
         UP, DOWN, LEFT, RIGHT;
     }
+     */
     public void playerMove(Movement movement) {
         int originalX = getPlayerPosition().getX();
         int originalY = getPlayerPosition().getY();

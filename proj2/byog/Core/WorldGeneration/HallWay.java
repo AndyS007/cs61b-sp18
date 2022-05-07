@@ -1,4 +1,4 @@
-package byog.Core;
+package byog.Core.WorldGeneration;
 
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
@@ -10,7 +10,7 @@ import java.util.Random;
 public class HallWay {
 
     //随机找一个起始点
-    private static Position RandomStart(TETile[][]world,long seed){
+    private static Position RandomStart(TETile[][]world, long seed){
         Random RANDOM=new Random(seed);
         while (true){
             int startX=RANDOM.nextInt(world.length-2);

@@ -1,6 +1,7 @@
-package byog.Core;
+package byog.Core.WorldGeneration;
 
 import java.io.Serializable;
+import byog.Core.EnumType.Movement;
 
 public class Position implements Serializable {
 
@@ -19,7 +20,7 @@ public class Position implements Serializable {
     public int getY() {
             return y;
     }
-    public Position nextPosition(World.Movement movement) {
+    public Position nextPosition(Movement movement) {
         Position p = new Position(this.getX(), this.getY());
         switch (movement) {
             case UP : {
@@ -42,7 +43,7 @@ public class Position implements Serializable {
         return p;
 
     }
-    public void move(World.Movement movement) {
+    public void move(Movement movement) {
             switch (movement) {
                 case UP : {
                     y += 1;
