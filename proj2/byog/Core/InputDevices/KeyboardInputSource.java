@@ -3,8 +3,6 @@ package byog.Core.InputDevices;
 import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class KeyboardInputSource implements InputSource{
     int menuLen;
