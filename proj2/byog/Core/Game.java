@@ -139,18 +139,8 @@ public class Game {
 
 
 
+
     /*
-    public String parseWASD(String input) {
-        String movements = "wasd";
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
-            if (movements.contains(Character.toString(c))) {
-                sb.append(c);
-            }
-        }
-        return sb.toString();
-    }
     public void cheatCode() {
         world.getMap()[world.player.getX()][world.player.getY()] = Tileset.FLOOR;
         world.player.x = world.getDoorPosition().getX();

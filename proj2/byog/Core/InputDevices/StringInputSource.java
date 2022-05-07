@@ -6,15 +6,6 @@ import java.util.regex.Pattern;
 public class StringInputSource implements InputSource{
     private String input;
     private int index;
-    private boolean movmentExist;
-    public static void main(String[] args) {
-        String input = "l:q";
-        InputSource is = new StringInputSource(input);
-        //long seed = is.getSeed();
-        System.out.println(is.endsWithSave());
-        //System.out.println(input);
-
-    }
 
     public StringInputSource(String s) {
         input = s.toLowerCase();
@@ -42,7 +33,6 @@ public class StringInputSource implements InputSource{
 
     @Override
     public boolean isOver() {
-
         return index == input.length();
     }
 
