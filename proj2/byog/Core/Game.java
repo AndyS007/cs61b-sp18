@@ -1,6 +1,5 @@
 package byog.Core;
 
-import byog.Core.EnumType.InputType;
 import byog.Core.EnumType.Movement;
 import byog.Core.InputDevices.InputSource;
 import byog.Core.InputDevices.KeyboardInputSource;
@@ -16,7 +15,7 @@ import java.awt.*;
 import java.io.*;
 
 public class Game {
-    TERenderer ter = new TERenderer();
+    TERenderer ter;
     World world;
     //for simplifying the codes
     Position player;
@@ -25,13 +24,12 @@ public class Game {
 
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
-    public static final int HEIGHT = 50;
+    public static final int HEIGHT = 30;
     public static final int MENU_LENGTH = 50;
-    public boolean playerTurn = false;
 
     //TODO:: check the seed 11!!!!!
     public Game() {
-
+        ter = new TERenderer();
     }
 
 
@@ -45,7 +43,7 @@ public class Game {
         game.playWithKeyboard();
     }
 
-    public World generateWorld(InputSource inputSource) {
+    public World generateWorld() {
         char option = inputSource.getOption();
         switch(option) {
             case 'n': {
@@ -61,46 +59,36 @@ public class Game {
         }
         return null;
     }
-    public void play(InputSource inputSource, InputType inputType) {
+    public void play() {
 
-        if (inputType == InputType.KEYBOARD) {
-            ter.initialize(WIDTH, HEIGHT);
-            ter.renderFrame(world.getMap());
-        }
+        ter.initialize(WIDTH, HEIGHT);
+        ter.renderFrame(world.getMap());
         while (!inputSource.isOver()) {
             char c = inputSource.getMovementOrInstruction();
             if (inputSource.isMovement(c)) {
                 movePlayer(c);
-                if (inputType == InputType.KEYBOARD) {
-                    ter.renderFrame(world.getMap());
-                }
+                ter.renderFrame(world.getMap());
             }
         }
         if (inputSource.endsWithSave()) {
             saveWorld(world);
-            if (inputType == InputType.KEYBOARD) {
-                showMessage("Your Game have been successfully saved!");
-            }
+            showMessage("Your Game have been successfully saved!");
         }
-        if (inputType == InputType.KEYBOARD) {
-            showMessage("You End The Game");
-        }
+        showMessage("You End The Game");
 
 
     }
     public void playWithKeyboard() {
         inputSource = new KeyboardInputSource(MENU_LENGTH);
-        world = generateWorld(inputSource);
-        play(inputSource, InputType.KEYBOARD);
+        world = generateWorld();
+        play();
     }
 
     public TETile[][] playWithInputString(String input) {
         inputSource = new StringInputSource(input);
-        world = generateWorld(inputSource);
-        play(inputSource, InputType.STRING);
-        /*
-        while (!inputSource.isGameOver()) {
-            char c  = inputSource.getMovementOrInstruction();
+        world = generateWorld();
+        while (!inputSource.isOver()) {
+            char c = inputSource.getMovementOrInstruction();
             if (inputSource.isMovement(c)) {
                 movePlayer(c);
             }
@@ -108,7 +96,6 @@ public class Game {
         if (inputSource.endsWithSave()) {
             saveWorld(world);
         }
-         */
         return world.getMap();
     }
 
@@ -157,7 +144,6 @@ public class Game {
             world.playerMove(movement);
         } else if (world.getMap()[nextX][nextY].equals(Tileset.LOCKED_DOOR)) {
             world.getMap()[nextX][nextY] = Tileset.UNLOCKED_DOOR;
-            playerTurn = false;
             showMessage("YOU WIN THE GAME");
         } else if (world.getMap()[nextX][nextY].equals(Tileset.WALL)) {
             //showMessage("You hit the wall");
