@@ -22,6 +22,7 @@ public class GraphDB {
      * creating helper classes, e.g. Node, Edge, etc. */
     private Map<Long, Node> nodes = new HashMap<>();
     private Map<Long, Node> cleanNodes = new HashMap<>();
+    private KDTree kd;
 
 
 
@@ -104,7 +105,17 @@ public class GraphDB {
             e.printStackTrace();
         }
         clean();
+        kd = bulidKDTree();
 
+    }
+
+    private KDTree bulidKDTree() {
+        KDTree kdTree = new KDTree();
+        for (long id : vertices()) {
+            Point tmp = new Point(lon(id), lat(id), id);
+            kdTree.insert(tmp);
+        }
+        return kdTree;
     }
 
     /**
@@ -128,7 +139,6 @@ public class GraphDB {
             if (!n.neighbor.isEmpty()) {
                 for (long id : n.neighbor.keySet()) {
                     cleanNodes.put(id, nodes.get(id));
-
                 }
             }
         }
@@ -212,6 +222,7 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
+        /*
         long closestID = 0;
         double min = Double.MAX_VALUE;
         for (Node n : cleanNodes.values()) {
@@ -222,7 +233,8 @@ public class GraphDB {
             }
 
         }
-        return closestID;
+        */
+        return kd.nearest(lon, lat).getId();
     }
 
     /**
