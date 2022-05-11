@@ -75,6 +75,9 @@ public class GraphDB {
         public void setName(String name) {
             this.name = name;
         }
+        public String getNeighborWayName(long id) {
+            return neighbor.get(id);
+        }
         public long getId() {
             return this.id;
         }

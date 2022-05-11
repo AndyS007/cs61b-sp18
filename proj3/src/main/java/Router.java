@@ -1,7 +1,6 @@
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 /**
  * This class provides a shortestPath method for finding routes between two points
  * on the map. Start by using Dijkstra's, and if your code isn't fast enough for your
@@ -89,7 +88,96 @@ public class Router {
      * route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
-        return null; // FIXME
+        List<NavigationDirection> ndList = new ArrayList<>();
+        double distance = 0;
+        int nextDirection = NavigationDirection.START;
+        if (route.size() == 2) {
+            long cur = route.get(0);
+            long next = route.get(1);
+            distance = g.distance(cur, next);
+            String way = g.getNode(cur).getNeighborWayName(next);
+            NavigationDirection nd = new NavigationDirection(nextDirection, way, distance);
+            ndList.add(nd);
+            return ndList;
+        }
+        double lastDistance = 0;
+        String lastEdge = null;
+
+        //use only two vertices to fix problem
+        for (int i = 0; i < route.size(); i += 1) {
+
+        }
+
+
+
+
+
+        for (int i = 1; i < route.size() - 1; i += 1) {
+            long pre = route.get(i - 1);
+            long cur = route.get(i);
+            long next = route.get(i + 1);
+            double nextBearing = g.bearing(cur, next);
+            double curBearing = g.bearing(pre, cur);
+            String curEdge = g.getNode(pre).getNeighborWayName(cur);
+            String nextEdge = g.getNode(cur).getNeighborWayName(next);
+            distance += g.distance(cur, pre);
+            if (!isSameWay(curEdge, nextEdge)) { // need to change direction
+                NavigationDirection nd = new NavigationDirection(nextDirection, curEdge, distance);
+                ndList.add(nd);
+                nextDirection = getDirection(nextBearing, curBearing);
+                distance = 0;
+            }
+            if (i == route.size() - 2) {
+                lastEdge = nextEdge;
+                lastDistance = distance + g.distance(cur, next);
+            }
+        }
+        NavigationDirection nd = new NavigationDirection(nextDirection, lastEdge, lastDistance);
+        ndList.add(nd);
+
+        return ndList;
+    }
+    private static boolean isSameWay(String curWay, String nextWay) {
+        if (nextWay == null && curWay == null) {
+            return true;
+        } else if (nextWay == null || curWay == null) {
+            return false;
+        }
+        return curWay.equals(nextWay);
+    }
+    private static double getBearing(GraphDB g, long from, long to) {
+        return g.bearing(from, to);
+    }
+    private static List<Double> generateBearingTable(GraphDB g, List<Long> route) {
+        List<Double> bearingTable = new ArrayList<>();
+        for (int i = 0; i < route.size() - 1; i += 1) {
+            long cur = route.get(i);
+            long next = route.get(i + 1);
+            double bearing = g.bearing(cur, next);
+            bearingTable.add(bearing);
+        }
+        return bearingTable;
+    }
+    private static int getDirection(double currentBearing, double previousBearing) {
+        double relativeBearing = currentBearing - previousBearing;
+        return bearingToDirection(relativeBearing);
+    }
+    private static int bearingToDirection(double angle) {
+        double absAngle = Math.abs(angle);
+        if (absAngle > 180) {
+            absAngle = 360 -absAngle;
+            angle *= -1;
+        }
+        if (absAngle <= 15) {
+            return NavigationDirection.STRAIGHT;
+        } else if (absAngle <= 30) {
+            return angle < 0 ? NavigationDirection.SLIGHT_LEFT : NavigationDirection.SLIGHT_RIGHT;
+        } else if (absAngle <= 100) {
+            return angle < 0 ? NavigationDirection.LEFT : NavigationDirection.RIGHT;
+        } else {
+            return angle < 0? NavigationDirection.SHARP_LEFT : NavigationDirection.SHARP_RIGHT;
+        }
+
     }
 
 
@@ -144,6 +232,15 @@ public class Router {
             this.direction = STRAIGHT;
             this.way = UNKNOWN_ROAD;
             this.distance = 0.0;
+        }
+        public NavigationDirection(int direction, String way, double distance) {
+            this.direction = direction;
+            if (way == null) {
+                this.way = "";
+            } else {
+                this.way = way;
+            }
+            this.distance = distance;
         }
 
         public String toString() {
