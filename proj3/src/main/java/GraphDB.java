@@ -20,9 +20,12 @@ import java.util.*;
 public class GraphDB {
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
-    private Map<Long, Node> nodes = new HashMap<>();
+    public Map<Long, Node> allNodes = new HashMap<>();
     private Map<Long, Node> cleanNodes = new HashMap<>();
+    // query: cleaned name; result: locations that have the same cleaned name;
+    //private Map<String, List<Long>> cleanedNameToLocations = new HashMap<>();
     private KDTree kd;
+    private Tries<List<Long>> tries;
 
 
 
@@ -75,18 +78,19 @@ public class GraphDB {
         public void setName(String name) {
             this.name = name;
         }
-        public String getNeighborWayName(long id) {
+        public String getWayToNeighbor(long id) {
             return neighbor.get(id);
         }
+
         public long getId() {
             return this.id;
         }
     }
     void addNode(Node n) {
-        this.nodes.put(n.id, n);
+        this.allNodes.put(n.id, n);
     }
     Node getNode(long id) {
-        return nodes.get(id);
+        return allNodes.get(id);
     }
 
     /**
@@ -108,17 +112,67 @@ public class GraphDB {
             e.printStackTrace();
         }
         clean();
-        kd = bulidKDTree();
+        kd = buildKDTree();
+        buildTries();
+
 
     }
 
-    private KDTree bulidKDTree() {
+    /*
+    private void buildTriesAndNameMap() {
+        tries = new Tries<>();
+        for (Map.Entry<Long, Node> entry : allNodes.entrySet()) {
+            String nodeName = entry.getValue().name;
+            if (nodeName != null) {
+                String cleanName = cleanString(nodeName);
+                Long id = entry.getValue().getId();
+                if (!cleanedNameToLocations.containsKey(cleanName)) {
+                    cleanedNameToLocations.put(cleanName, new ArrayList<>());
+                    // add only one time
+                    tries.put(cleanName, id);
+                }
+                cleanedNameToLocations.get(cleanName).add(id);
+            }
+        }
+    }
+
+     */
+    private void buildTries() {
+        tries = new Tries<>();
+        for (Map.Entry<Long, Node> entry : allNodes.entrySet()) {
+            String nodeName = entry.getValue().name;
+            if (nodeName != null) {
+                String cleanName = cleanString(nodeName);
+                Long id = entry.getKey();
+                if (!tries.contains(cleanName)) {
+                    tries.put(cleanName, new ArrayList<>());
+                }
+                tries.get(cleanName).add(id);
+            }
+        }
+    }
+    private KDTree buildKDTree() {
         KDTree kdTree = new KDTree();
         for (long id : vertices()) {
             Point tmp = new Point(lon(id), lat(id), id);
             kdTree.insert(tmp);
         }
         return kdTree;
+    }
+    public List<Long> getLocationsByName(String name) {
+        String cleanedName = cleanString(name);
+        return tries.get(cleanedName);
+    }
+    public List<String> getLocationsWithPrefix(String prefix) {
+        List<String> results = new ArrayList<>();
+        Iterable<String> cleanStrings = tries.keyWithPrefix(cleanString(prefix));
+        for (String s : cleanStrings) {
+            for (long id : tries.get(s)) {
+                String name = getNode(id).name;
+                results.add(name);
+            }
+        }
+        return results;
     }
 
     /**
@@ -138,10 +192,10 @@ public class GraphDB {
      */
     private void clean() {
         cleanNodes = new HashMap<>();
-        for (Node n : nodes.values()) {
+        for (Node n : allNodes.values()) {
             if (!n.neighbor.isEmpty()) {
                 for (long id : n.neighbor.keySet()) {
-                    cleanNodes.put(id, nodes.get(id));
+                    cleanNodes.put(id, allNodes.get(id));
                 }
             }
         }
@@ -163,7 +217,7 @@ public class GraphDB {
      */
     Iterable<Long> adjacent(long v) {
         //Node n = cleanNodes.get(v);
-        Node n = nodes.get(v);
+        Node n = allNodes.get(v);
         return n.neighbor.keySet();
     }
 
@@ -225,18 +279,6 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        /*
-        long closestID = 0;
-        double min = Double.MAX_VALUE;
-        for (Node n : cleanNodes.values()) {
-            double tmpDistance = distance(n.lon, n.lat, lon, lat);
-            if (tmpDistance < min) {
-                closestID = n.id;
-                min = tmpDistance;
-            }
-
-        }
-        */
         return kd.nearest(lon, lat).getId();
     }
 
@@ -246,7 +288,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        Node n = nodes.get(v);
+        Node n = allNodes.get(v);
         return n.lon;
     }
 
@@ -256,7 +298,7 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        Node n = nodes.get(v);
+        Node n = allNodes.get(v);
         return n.lat;
     }
 }

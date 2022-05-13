@@ -4,12 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.IOException;
@@ -279,13 +274,13 @@ public class MapServer {
 
     /**
      * In linear time, collect all the names of OSM locations that prefix-match the query string.
-     * @param prefix Prefix string to be searched for. Could be any case, with our without
+     * @param prefix Prefix string to be searched for. Could be any case, with or without
      *               punctuation.
      * @return A <code>List</code> of the full names of locations whose cleaned name matches the
      * cleaned <code>prefix</code>.
      */
     public static List<String> getLocationsByPrefix(String prefix) {
-        return new LinkedList<>();
+        return graph.getLocationsWithPrefix(prefix);
     }
 
     /**
@@ -301,8 +296,22 @@ public class MapServer {
      * "id" : Number, The id of the node. <br>
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+        List<Map<String, Object>> results = new ArrayList<>();
+        List<Long> nodesID = graph.getLocationsByName(locationName);
+        System.out.println("Find " + nodesID.size() + "locations");
+        for (long id : nodesID) {
+            GraphDB.Node node = graph.getNode(id);
+            Map<String, Object> map = new HashMap<>();
+            map.put("lat", node.lat);
+            map.put("lon", node.lon);
+            map.put("name", node.name);
+            map.put("id", node.id);
+            System.out.println("id: " + id);
+            results.add(map);
+        }
+        return results;
     }
+
 
     /**
      * Validates that Rasterer has returned a result that can be rendered.

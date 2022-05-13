@@ -89,53 +89,56 @@ public class Router {
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
         List<NavigationDirection> ndList = new ArrayList<>();
-        double distance = 0;
+
         int nextDirection = NavigationDirection.START;
-        if (route.size() == 2) {
-            long cur = route.get(0);
-            long next = route.get(1);
-            distance = g.distance(cur, next);
-            String way = g.getNode(cur).getNeighborWayName(next);
-            NavigationDirection nd = new NavigationDirection(nextDirection, way, distance);
-            ndList.add(nd);
-            return ndList;
-        }
-        double lastDistance = 0;
-        String lastEdge = null;
-
-        //use only two vertices to fix problem
-        for (int i = 0; i < route.size(); i += 1) {
-
-        }
-
-
-
-
-
-        for (int i = 1; i < route.size() - 1; i += 1) {
-            long pre = route.get(i - 1);
-            long cur = route.get(i);
-            long next = route.get(i + 1);
-            double nextBearing = g.bearing(cur, next);
-            double curBearing = g.bearing(pre, cur);
-            String curEdge = g.getNode(pre).getNeighborWayName(cur);
-            String nextEdge = g.getNode(cur).getNeighborWayName(next);
-            distance += g.distance(cur, pre);
-            if (!isSameWay(curEdge, nextEdge)) { // need to change direction
-                NavigationDirection nd = new NavigationDirection(nextDirection, curEdge, distance);
+        double distance = 0;
+        List<DirectionNode> nodeList = buildDirectionNodes(route, g);
+        for (DirectionNode n : nodeList) {
+            distance += n.distanceFromPre;
+            if (n.isIntersection() || n.next == null) {
+                NavigationDirection nd  = new NavigationDirection(nextDirection, n.curWay, distance);
+                nextDirection = getDirection(n.nextBearing, n.preBearing);
                 ndList.add(nd);
-                nextDirection = getDirection(nextBearing, curBearing);
                 distance = 0;
             }
-            if (i == route.size() - 2) {
-                lastEdge = nextEdge;
-                lastDistance = distance + g.distance(cur, next);
-            }
         }
-        NavigationDirection nd = new NavigationDirection(nextDirection, lastEdge, lastDistance);
-        ndList.add(nd);
-
         return ndList;
+    }
+    private static List<DirectionNode> buildDirectionNodes(List<Long> route, GraphDB g) {
+        List<DirectionNode> directionNodeList = new ArrayList<>();
+        for (int i = 0; i < route.size(); i += 1) {
+            Long pre = i == 0 ? null : route.get(i - 1);
+            Long cur = route.get(i);
+            Long next = i == route.size() - 1 ? null : route.get(i + 1);
+            directionNodeList.add(new DirectionNode(pre, cur, next, g));
+        }
+        return directionNodeList;
+    }
+    private static class DirectionNode {
+        Long pre;
+        Long cur;
+        Long next;
+        Double distanceFromPre;
+        Double distanceToNext;
+        Double preBearing;
+        Double nextBearing;
+        String curWay;
+        String nextWay;
+        public DirectionNode(Long pre, Long cur, Long next, GraphDB g) {
+            this.pre = pre;
+            this.cur = cur;
+            this.next = next;
+            distanceFromPre = pre == null ? 0.0 : g.distance(pre, cur);
+            distanceToNext = next == null ? 0.0 : g.distance(cur, next);
+            preBearing = pre == null ? g.bearing(cur, next) : g.bearing(pre,cur);
+            nextBearing = next == null ? g.bearing(pre, cur) : g.bearing(cur, next);
+            curWay = pre == null ? g.getNode(cur).getWayToNeighbor(next) : g.getNode(pre).getWayToNeighbor(cur);
+            nextWay = next == null ? g.getNode(pre).getWayToNeighbor(cur) : g.getNode(cur).getWayToNeighbor(next);
+        }
+        private boolean isIntersection() {
+            return !isSameWay(curWay, nextWay);
+        }
+
     }
     private static boolean isSameWay(String curWay, String nextWay) {
         if (nextWay == null && curWay == null) {
@@ -145,19 +148,7 @@ public class Router {
         }
         return curWay.equals(nextWay);
     }
-    private static double getBearing(GraphDB g, long from, long to) {
-        return g.bearing(from, to);
-    }
-    private static List<Double> generateBearingTable(GraphDB g, List<Long> route) {
-        List<Double> bearingTable = new ArrayList<>();
-        for (int i = 0; i < route.size() - 1; i += 1) {
-            long cur = route.get(i);
-            long next = route.get(i + 1);
-            double bearing = g.bearing(cur, next);
-            bearingTable.add(bearing);
-        }
-        return bearingTable;
-    }
+
     private static int getDirection(double currentBearing, double previousBearing) {
         double relativeBearing = currentBearing - previousBearing;
         return bearingToDirection(relativeBearing);
