@@ -143,6 +143,12 @@ public class GraphDB {
         String cleanedName = cleanString(name);
         return tries.get(cleanedName);
     }
+
+    /**
+     * Get the locations with specific prefix.
+     * @param prefix The prefix of the names of locations that you want to find.
+     * @return A list of locations whose name matches prefix.
+     */
     public List<String> getLocationsWithPrefix(String prefix) {
         List<String> results = new ArrayList<>();
         Iterable<String> cleanStrings = tries.keyWithPrefix(cleanString(prefix));
