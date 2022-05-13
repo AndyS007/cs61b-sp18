@@ -115,28 +115,8 @@ public class GraphDB {
         kd = buildKDTree();
         buildTries();
 
-
     }
 
-    /*
-    private void buildTriesAndNameMap() {
-        tries = new Tries<>();
-        for (Map.Entry<Long, Node> entry : allNodes.entrySet()) {
-            String nodeName = entry.getValue().name;
-            if (nodeName != null) {
-                String cleanName = cleanString(nodeName);
-                Long id = entry.getValue().getId();
-                if (!cleanedNameToLocations.containsKey(cleanName)) {
-                    cleanedNameToLocations.put(cleanName, new ArrayList<>());
-                    // add only one time
-                    tries.put(cleanName, id);
-                }
-                cleanedNameToLocations.get(cleanName).add(id);
-            }
-        }
-    }
-
-     */
     private void buildTries() {
         tries = new Tries<>();
         for (Map.Entry<Long, Node> entry : allNodes.entrySet()) {
