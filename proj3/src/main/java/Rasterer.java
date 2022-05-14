@@ -84,6 +84,7 @@ public class Rasterer {
             return false;
         }
         //modify lon and lat to the ROOT
+        /*
         if (left - ROOT_ULLON < 0) {
             left = ROOT_ULLON;
             params.put("ullon", left);
@@ -100,6 +101,7 @@ public class Rasterer {
             down = ROOT_LRLAT;
             params.put("lrlat", down);
         }
+         */
 
 
         return true;
